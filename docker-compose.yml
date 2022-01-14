@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    environment:
+      TZ: Asia/Tokyo
+      LC_CTYPE: C.UTF-8
+      RUBOCOP_CACHE_ROOT: /root/.cache/rubocop_cache
+    command: >-
+      bash -c "rm -rf /myapp/tmp/pids/*.pid && bundle install -j4 &&
+      bin/rails db:create db:migrate &&
+      bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/myapp
+    ports:
+      - "33000:3000"
+    depends_on:
+      - db
+    tty: true
+    stdin_open: true
+
+  db:
+    platform: linux/x86_64
+    restart: always
+    image: mysql:5.7.33
+    environment:
+      - MYSQL_DATABASE=database
+      - MYSQL_ROOT_PASSWORD=pass
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "33306:3306"
+
+volumes:
+  db-data:
