@@ -25,7 +25,7 @@ services:
     restart: always
     image: mysql:5.7.33
     environment:
-      - MYSQL_DATABASE=database
+      - MYSQL_DATABASE=myapp_db
       - MYSQL_ROOT_PASSWORD=pass
     volumes:
       - db-data:/var/lib/mysql
